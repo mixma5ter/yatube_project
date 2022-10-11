@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if is_edit %}
+    Редактировать запись
+  {% else %}
+    Добавить запись
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 p-5">
+        <div class="card">
+          <div class="card-header">
+            {% if is_edit %}
+              Редактировать запись
+            {% else %}
+              Добавить запись
+            {% endif %}
+          </div>
+          <div class="card-body">
+
+            <form method="post" enctype="multipart/form-data"
+              {% if action_url %}
+                action="{% url 'action_url' %}"
+              {% endif %}
+            >
+              {% csrf_token %}
+
+              <div class="form-group row my-3 p-3">
+                <label for="id_text">
+                  {{ form.text.help_text }}
+                  <span class="required text-danger" >*</span>
+                </label>
+                <textarea name="text"
+                          cols="40"
+                          rows="10"
+                          class="form-control"
+                          required
+                          id="id_text">{{ post.text }}</textarea>
+                <small id="id_text-help" class="form-text text-muted">
+                  {{ form.text.label }}
+                </small>
+              </div>
+              <div class="form-group row my-3 p-3">
+                <label for="id_group">
+                  {{ form.group.help_text }}
+                </label>
+                <select name="group" class="form-control" id="id_group">
+                  <option value="" selected>---------</option>
+
+                  {% for group in group_list %}
+                    <option value="{{ group.id }}">{{ group }}</option>
+                  {% endfor %}
+
+                </select>
+                <small id="id_group-help" class="form-text text-muted">
+                  {{ form.group.label }}
+                </small>
+              </div>
+              <div class="form-group row my-3 p-3">
+                <label for="id_image">
+                  {{ form.image.help_text }}                     
+                </label>
+                <input type="file" name="image" accept="image/*" class="form-control" id="id_image">
+                <small id="id_group-help" class="form-text text-muted">
+                  {{ form.image.label }}
+                </small>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">
+                  {% if is_edit %}
+                    Сохранить
+                  {% else %}
+                    Добавить
+                  {% endif %}               
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

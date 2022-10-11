@@ -25,19 +25,28 @@ SECRET_KEY = 'd=ag3vu6$z$1dxy=su%a(1-$9dmn#ek5s7s$yg!%91w--xt-(z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+    'testserver',
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'posts.apps.PostsConfig', # Регистрация приложения posts
     'django.contrib.admin',
-    'django.contrib.auth',
+    'django.contrib.auth',  # Приложение для регистрация и авторизация пользователей
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'posts.apps.PostsConfig',  # Регистрация приложения posts
+    'users.apps.UsersConfig',  # Регистрация приложения users
+    'core.apps.CoreConfig',  # Регистрация приложения core
+    'about.apps.AboutConfig',  # Регистрация приложения about
+    'sorl.thumbnail',  # Приложение для работы с графикой
 ]
 
 MIDDLEWARE = [
@@ -52,10 +61,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'yatube.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Подключаем контекст-процессор вывода текущего года
+                'core.context_processors.year.year',
             ],
         },
     },
@@ -104,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -119,3 +131,35 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Без этой настройки статика не подключится
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# Директория загрузки файлов пользователей
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Эти константы указывают адреса страниц, на которые пользователь
+# будет перенаправлен в той или иной ситуации.
+LOGIN_URL = 'users:login'
+LOGIN_REDIRECT_URL = 'posts:index'
+# LOGOUT_REDIRECT_URL = 'posts:index'
+
+
+#  подключаем движок filebased.EmailBackend
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# указываем директорию, в которую будут складываться файлы писем
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+
+# обрабатываем ошибку 403
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+
+
+# бэкенд кэширования
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}

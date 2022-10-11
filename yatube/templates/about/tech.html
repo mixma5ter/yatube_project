@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Технологии{% endblock %}
+
+{% block content %}
+{% comment %} Колонки с отступом сверху и снизу {% endcomment %}
+  <div class="container py-5">
+    <div class="row">
+      <aside class="col-12 col-md-3">
+        <h3>Ключевые навыки</h3>
+        <ul class="list-group list-group-flush">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">Python</li>
+            <li class="list-group-item">Django</li>
+            <li class="list-group-item">SQL</li>
+            <li class="list-group-item">HTML, CSS, Bootstrap</li>
+            <li class="list-group-item">Основы JavaScript</li>
+            <li class="list-group-item">Git (bash)</li>
+          </ul>
+      </aside>
+      <article class="col-12 col-md-9">
+        <p>Здесь перечислен основной стек навыков, которые применялись в
+          работе над проектом.</p>
+        <p></p>
+      </article>
+    </div>
+  </div>
+{% endblock %}
